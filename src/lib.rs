@@ -61,13 +61,12 @@ impl Fit {
                         Some((_, def)) => def,
                     };
                     let data_message: DataMessage = cursor.read_ne_args((definition,))?;
-                    if data_message.message_type == MessageType::None {
-                        continue;
+                    if data_message.message_type != MessageType::None {
+                        data.push(FitMessage::Data(FitDataMessage {
+                            header: message_header,
+                            data: data_message,
+                        }));
                     }
-                    data.push(FitMessage::Data(FitDataMessage {
-                        header: message_header,
-                        data: data_message,
-                    }));
                     if cursor.position() >= (header.data_size + header.header_size as u32) as u64 {
                         break;
                     }
